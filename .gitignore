@@ -1,0 +1,8 @@
+node_modules/
+dist/
+coverage/
+.env*
+HANDOFF.md
+*.handoff.md
+*.handoff.json
+.DS_Store
