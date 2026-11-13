@@ -5,6 +5,8 @@ import { constants } from 'node:fs';
 import { resolve } from 'node:path';
 import { snapshot, render } from './snapshot.js';
 
+const defaultCommits = 5;
+const defaultMaxChars = 12_000;
 const help = `agent-handoff-kit 0.1.0
 
 Usage:
@@ -14,6 +16,7 @@ Usage:
 
 snapshot defaults to Markdown on stdout. Existing files are never overwritten
 unless --force is supplied. JSON is a complete snapshot (no character budget).
+Defaults: --repo ., --commits ${defaultCommits}, --max-chars ${defaultMaxChars}.
 verify accepts Markdown or JSON; exit 0 = same tracked state, 2 = stale, 1 = error.
 Untracked file contents are NOT fingerprinted. Neither command runs project code.
 `;
@@ -30,8 +33,8 @@ async function main() {
   const repo = resolve(v.repo ?? '.');
   if (p[0] === 'snapshot') {
     if (p.length !== 1) throw new Error('snapshot does not accept positional arguments.');
-    const commits = Number(v.commits ?? 5);
-    const limit = Number(v['max-chars'] ?? 12000);
+    const commits = Number(v.commits ?? defaultCommits);
+    const limit = Number(v['max-chars'] ?? defaultMaxChars);
     if (!Number.isInteger(commits) || commits < 0 || commits > 20) throw new Error('--commits must be an integer from 0 to 20.');
     if (!Number.isInteger(limit) || limit < 2000 || limit > 100000) throw new Error('--max-chars must be an integer from 2000 to 100000.');
     const format = v.format ?? 'markdown';
