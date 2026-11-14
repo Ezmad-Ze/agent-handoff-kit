@@ -98,6 +98,29 @@ test('check fails without writing; explicit update synchronizes and then passes'
   assert.equal(await readFile(readme, 'utf8'), document);
 });
 
+test('checker runs through a symlinked directory instead of silently skipping checks', async t => {
+  const { readme } = await checkerFixture(t);
+  const root = resolve(readme, '..');
+  const alias = root + '-alias';
+  const { symlink } = await import('node:fs/promises');
+  await symlink(root, alias, 'dir');
+  t.after(() => rm(alias, { force: true }));
+  const execute = (...args) => spawnSync(process.execPath,
+    [join(alias, 'scripts/check-cli-docs.mjs'), ...args], { encoding: 'utf8' });
+  const before = await readFile(readme, 'utf8');
+  const stale = execute();
+  assert.equal(stale.status, 1, stale.stderr);
+  assert.match(stale.stderr, /reference is stale/);
+  assert.equal(await readFile(readme, 'utf8'), before);
+  const updated = execute('--write');
+  assert.equal(updated.status, 0, updated.stderr);
+  assert.match(updated.stdout, /synchronized/);
+  assert.equal(await readFile(readme, 'utf8'), document);
+  const checked = execute();
+  assert.equal(checked.status, 0, checked.stderr);
+  assert.match(checked.stdout, /match the built CLI/);
+});
+
 test('explicit update refuses a version mismatch without changing documentation', async t => {
   const { readme, execute } = await checkerFixture(t, '99.0.0');
   const before = await readFile(readme, 'utf8');
@@ -122,3 +145,4 @@ test('checker refuses a symlinked README rather than changing its external targe
     assert.equal(await readFile(target, 'utf8'), before);
   }
 });
+

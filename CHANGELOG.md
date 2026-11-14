@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Fix the documentation checker's direct-entry detection through symlinked directories, including macOS temporary paths; add a regression covering stale rejection, explicit synchronization and successful checking through an alias.
 - Add `docs:check` to compare the README command reference with built CLI help and validate the package-version banner.
 - Add `docs:update` to synchronize only the marked reference block after a reviewed CLI change.
 - Run the drift check in CI; cover option/default/exit-code drift, marker errors, idempotence, and invocation outside a Git repository.
@@ -15,3 +16,4 @@
 - Temporary-repository tests, demo and CI configuration.
 
 Local preparation date; GitHub publication and remote CI status must be verified separately.
+

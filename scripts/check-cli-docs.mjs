@@ -1,6 +1,7 @@
 import { lstat, readFile, writeFile } from 'node:fs/promises';
+import { realpathSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
-import { fileURLToPath, pathToFileURL } from 'node:url';
+import { fileURLToPath } from 'node:url';
 
 const begin = '<!-- BEGIN CLI REFERENCE -->';
 const end = '<!-- END CLI REFERENCE -->';
@@ -64,9 +65,13 @@ async function main() {
   } else process.stdout.write('README CLI reference and package version match the built CLI.\n');
 }
 
-if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+// Node resolves module paths through symlinks, while argv can keep the alias
+// (for example /var vs /private/var on macOS). Compare canonical paths.
+if (process.argv[1]
+    && realpathSync(fileURLToPath(import.meta.url)) === realpathSync(process.argv[1])) {
   main().catch(error => {
     process.stderr.write(`Error: ${error.message}\n`);
     process.exitCode = 1;
   });
 }
+
