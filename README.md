@@ -39,15 +39,24 @@ It creates a temporary **sample** repository, captures a handoff, changes a trac
 
 ## Commands
 
-| Command / option | Behavior |
-| --- | --- |
-| `snapshot --repo PATH` | Markdown to stdout; defaults to the current directory |
-| `--output FILE` | Create a file; refuse to overwrite by default |
-| `--force` | Explicitly allow overwriting the supplied output path |
-| `--format json` | Structured snapshot with schema version 1 |
-| `--commits 0..20` | Number of recent commit subjects, default 5 |
-| `--max-chars 2000..100000` | Markdown character budget, default 12000; not a tokenizer |
-| `verify FILE --repo PATH` | Exit 0 for matching state, 2 for stale, 1 for an error |
+<!-- BEGIN CLI REFERENCE -->
+
+```text
+agent-handoff-kit 0.1.0
+
+Usage:
+  agent-handoff snapshot [--repo PATH] [--output FILE] [--format markdown|json]
+                         [--commits 0..20] [--max-chars 2000..100000] [--force]
+  agent-handoff verify FILE [--repo PATH]
+
+snapshot defaults to Markdown on stdout. Existing files are never overwritten
+unless --force is supplied. JSON is a complete snapshot (no character budget).
+Defaults: --repo ., --commits 5, --max-chars 12000.
+verify accepts Markdown or JSON; exit 0 = same tracked state, 2 = stale, 1 = error.
+Untracked file contents are NOT fingerprinted. Neither command runs project code.
+```
+
+<!-- END CLI REFERENCE -->
 
 JSON snapshots have no character-budget truncation. There is an 8 MiB bound per Git response and a 15-second timeout per Git command. Very large repositories may need a narrower future capture mode.
 
@@ -92,9 +101,12 @@ See [architecture and tradeoffs](docs/architecture.md) and the [roadmap](docs/ro
 npm ci
 npm test
 npm run demo
+npm run docs:check
 ```
 
 Tests use temporary real Git repositories rather than mocked command output. They cover staged/unstaged metadata, renamed/newline paths, sensitive-path filtering, token redaction, unborn/detached repositories, stale detection, budget limits, overwrite protection and literal shell-like paths.
+
+The command reference above is generated from the built CLI. `npm run docs:check` verifies it and checks that the help banner matches `package.json`. After an intentional CLI change, run `npm run docs:update`, review the README diff, and commit both together. CI runs the check without rewriting files. This check covers the marked command reference and version banner, not the correctness of all prose, examples, or CLI behavior. Both commands run only this project's built `--help`; they do not inspect other repositories or run their scripts.
 
 CI is configured for Node 22/24 on Ubuntu/macOS. A configured matrix is not a claim that all remote runs have passed; check the actual Actions results after publication.
 

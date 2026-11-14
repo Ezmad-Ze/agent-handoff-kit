@@ -8,11 +8,15 @@
 - Real-Git fixture tests and an isolated CLI demo.
 - CI configuration and a practical architecture walkthrough.
 
+## Proposed milestone for review
+
+- Documentation drift check for the README command reference and package-version banner.
+- Explicit synchronization command and CI gate; no new repository data collection.
+
 ## Next small milestone
 
 - Add an opt-in file allowlist with bounded excerpts, if useful after real usage.
 - Add a stdio MCP adapter that exposes only explicit local repositories.
-- Add a CI check that detects documentation/CLI drift.
 
 Design and test privacy boundaries before expanding collected data. Neither excerpts nor MCP are implemented yet.
 

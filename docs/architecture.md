@@ -22,6 +22,12 @@ Executing commands from package scripts or agent instructions is a code-executio
 
 This product is a local CLI over Git metadata. A service layer would increase effort and operational cost without improving its first use case. TypeScript, Node built-ins and Git are sufficient. All npm dependencies are build-time only.
 
+## Keeping the command reference current
+
+`npm run docs:check` builds this project's CLI and invokes only its `--help`. The checker compares that output with the marked README reference and checks the version banner against `package.json`. A mismatch fails CI without rewriting documentation. The help and argument parser share the default commit count and Markdown budget values.
+
+After an intentional CLI change, `npm run docs:update` synchronizes the reference block. Missing, duplicated or reversed markers and symlinked README files are rejected. The updater preserves surrounding text and the document's line-ending convention. This is a development-time contract check, not a new repository capture mode or a guarantee that the prose and every command behavior are correct. Behavior tests remain necessary.
+
 ## What to explain in an interview
 
 1. Why porcelain `-z` is safer than parsing display-oriented Git output.

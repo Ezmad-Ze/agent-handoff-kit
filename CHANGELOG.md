@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- Add `docs:check` to compare the README command reference with built CLI help and validate the package-version banner.
+- Add `docs:update` to synchronize only the marked reference block after a reviewed CLI change.
+- Run the drift check in CI; cover option/default/exit-code drift, marker errors, idempotence, and invocation outside a Git repository.
+- Repository capture, privacy filtering, verification semantics and snapshot schema are unchanged.
+
 ## 0.1.0 — 2026-11-10
 
 - Initial TypeScript CLI: Markdown/JSON snapshots and verification.

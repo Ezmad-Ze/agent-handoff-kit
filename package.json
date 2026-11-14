@@ -10,7 +10,9 @@
     "build": "tsc",
     "test": "npm run build && node --test test/*.test.mjs",
     "start": "node dist/cli.js",
-    "demo": "npm run build && node scripts/demo.mjs"
+    "demo": "npm run build && node scripts/demo.mjs",
+    "docs:check": "npm run build && node scripts/check-cli-docs.mjs",
+    "docs:update": "npm run build && node scripts/check-cli-docs.mjs --write"
   },
   "devDependencies": { "@types/node": "^22.0.0", "typescript": "5.9.3" }
 }
